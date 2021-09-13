@@ -39,7 +39,7 @@ app.get('/help', (req, res) => {
   res.render('help', {
     title: 'Help',
     name: 'mmrza',
-    helpMsg: 'This is a help msg',
+    helpMsg: 'This website is very easy to use. Just enter the name of the desired location or address in the box and see the result.',
   });
 });
 
@@ -56,7 +56,7 @@ app.get('/weather', (req, res) => {
         error,
       });
     }
-    forecast(latitude, longitude, (error, { currentTemp, feelslike, description } = {}) => {
+    forecast(latitude, longitude, (error, { currentTemp, feelslike, description, humidity, wind_speed, localtime } = {}) => {
       if (error) {
         return res.send({
           error,
@@ -68,6 +68,9 @@ app.get('/weather', (req, res) => {
         description,
         currentTemp,
         feelslike,
+        humidity,
+        wind_speed,
+        localtime,
       });
     });
   });
