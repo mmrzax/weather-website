@@ -19,7 +19,7 @@ weatherForm.addEventListener('submit', (e) => {
         messageOne.textContent = data.error;
       } else {
         const { address, location, description, currentTemp, feelslike, wind_speed, humidity, localtime } = data;
-        messageOne.textContent = location + ' | LocalTime: ' + localtime;
+        messageOne.textContent = location + ' | Time: ' + localtime;
         messageTwo.textContent = `${description}, Current temperature is ${currentTemp} and it feels like ${feelslike}`;
         messageThree.textContent = `Humidity is ${humidity}% and Wind speed is ${wind_speed}KM/H`;
       }
