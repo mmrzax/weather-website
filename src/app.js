@@ -44,19 +44,43 @@ app.get('/help', (req, res) => {
 });
 
 app.get('/weather', (req, res) => {
-  if (!req.query.address) { // Check if address not provided then Send Err
+  if (
+    !req.query.address &&
+    !req.query.lat &&
+    !req.query.long
+  ) { // Check if address not provided then Send Err
     return res.send({
       error: 'Address must be provided!',
     });
   }
   const address = req.query.address;
-  geocode(address, (error, { latitude, longitude, location } = {}) => {
-    if (error) {
-      return res.send({
-        error,
+  if (address) {
+    geocode(address, (error, { latitude, longitude, location } = {}) => {
+      if (error) {
+        return res.send({
+          error,
+        });
+      }
+      forecast(latitude, longitude, (error, { currentTemp, feelslike, description, humidity, wind_speed, localtime } = {}) => {
+        if (error) {
+          return res.send({
+            error,
+          });
+        }
+        res.send({
+          address,
+          location,
+          description,
+          currentTemp,
+          feelslike,
+          humidity,
+          wind_speed,
+          localtime,
+        });
       });
-    }
-    forecast(latitude, longitude, (error, { currentTemp, feelslike, description, humidity, wind_speed, localtime } = {}) => {
+    });
+  } else {
+    forecast(req.query.lat, req.query.long, (error, { currentTemp, feelslike, description, humidity, wind_speed, localtime } = {}) => {
       if (error) {
         return res.send({
           error,
@@ -64,7 +88,6 @@ app.get('/weather', (req, res) => {
       }
       res.send({
         address,
-        location,
         description,
         currentTemp,
         feelslike,
@@ -73,7 +96,7 @@ app.get('/weather', (req, res) => {
         localtime,
       });
     });
-  });
+  }
 });
 
 app.get('/help/*', (req, res) => {
